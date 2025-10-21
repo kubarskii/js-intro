@@ -346,7 +346,7 @@
         <div class="progress">
           <div class="bar" id="bar"></div>
         </div>
-        <div id="counter">1 / 31</div>
+        <div id="counter">1 / 50</div>
       </footer>
     </div>
   </div> <!-- Close main-container -->
@@ -1241,7 +1241,7 @@
       - Use version managers like nvm
       - Verify installation: \`node --version\`
       
-      \`\`\bash
+      \`\`\`bash
       # Check Node.js version
       node --version
       
@@ -1252,6 +1252,7 @@
       node
       \`\`\`
       
+
       \`\`\`javascript
       // Simple Node.js server
       console.log("Hello from Node.js!");
@@ -2036,7 +2037,1584 @@
     `;
 
     const slide31 = dedent`
-      ## 31. Next Steps and Resources
+      ## 31. Introduction to TypeScript
+
+      ### What is TypeScript?
+      TypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
+
+      ### Key Benefits:
+      - **Static Type Checking**: Catch errors at compile time
+      - **Better IDE Support**: IntelliSense, refactoring, navigation
+      - **Modern JavaScript Features**: Use latest ES features with older browsers
+      - **Gradual Adoption**: Add types incrementally to existing JavaScript
+      - **Better Documentation**: Types serve as inline documentation
+      
+      ### Installing TypeScript:
+      \`\`\`bash
+      # Install globally
+      npm install -g typescript
+      
+      # Install locally in project
+      npm install --save-dev typescript
+      
+      # Check version
+      tsc --version
+      \`\`\`
+      
+    `;
+
+    const slide32 = dedent`
+      ## 32. TypeScript Types and Interfaces
+
+      ### Basic Types:
+      - \`string\`: Text data
+      - \`number\`: Numeric values (integers and floats)
+      - \`boolean\`: true/false
+      - \`null\` and \`undefined\`: Null and undefined values
+      - \`any\`: Any type (avoid when possible)
+      - \`void\`: No return value
+      - \`never\`: Values that never occur
+      
+      ### Advanced Types:
+      - **Union Types**: \`string | number\`
+      - **Intersection Types**: \`TypeA & TypeB\`
+      - **Literal Types**: \`"red" | "green" | "blue"\`
+      - **Generic Types**: \`Array<T>\`, \`Promise<T>\`
+      
+      ### Interfaces:
+      Define the shape of objects
+      
+      \`\`\`javascript
+      // Basic interface
+      interface User {
+        id: number;
+        name: string;
+        email: string;
+        isActive?: boolean; // Optional
+        readonly createdAt: Date; // Read-only
+      }
+      
+      // Extending interfaces
+      interface AdminUser extends User {
+        permissions: string[];
+        canDelete: boolean;
+      }
+      
+      // Function interfaces
+      interface SearchFunction {
+        (query: string, limit: number): Promise<string[]>;
+      }
+      
+      // Index signatures
+      interface StringDictionary {
+        [key: string]: string;
+      }
+      
+      // Generic interfaces
+      interface ApiResponse<T> {
+        data: T;
+        status: number;
+        message: string;
+      }
+      
+      // Using interfaces
+      const user: User = {
+        id: 1,
+        name: "John Doe",
+        email: "john@example.com",
+        createdAt: new Date()
+      };
+      
+      const admin: AdminUser = {
+        id: 2,
+        name: "Admin User",
+        email: "admin@example.com",
+        createdAt: new Date(),
+        permissions: ["read", "write", "delete"],
+        canDelete: true
+      };
+      \`\`\`
+    `;
+
+    const slide33 = dedent`
+      ## 33. TypeScript Classes and Generics
+
+      ### Classes with TypeScript:
+      Enhanced classes with type safety and access modifiers
+      
+      ### Access Modifiers:
+      - \`public\`: Accessible everywhere (default)
+      - \`private\`: Only accessible within the class
+      - \`protected\`: Accessible within class and subclasses
+      - \`readonly\`: Cannot be modified after initialization
+      
+      ### Generics:
+      Create reusable components that work with multiple types
+      
+      \`\`\`javascript
+      // Class with access modifiers
+      class BankAccount {
+        private balance: number;
+        public readonly accountNumber: string;
+        protected owner: string;
+        
+        constructor(accountNumber: string, owner: string, initialBalance: number = 0) {
+          this.accountNumber = accountNumber;
+          this.owner = owner;
+          this.balance = initialBalance;
+        }
+        
+        public deposit(amount: number): void {
+          if (amount > 0) {
+            this.balance += amount;
+          }
+        }
+        
+        public withdraw(amount: number): boolean {
+          if (amount > 0 && amount <= this.balance) {
+            this.balance -= amount;
+            return true;
+          }
+          return false;
+        }
+        
+        public getBalance(): number {
+          return this.balance;
+        }
+        
+        private validateAmount(amount: number): boolean {
+          return amount > 0 && amount <= 10000;
+        }
+      }
+      
+      // Generic class
+      class Stack<T> {
+        private items: T[] = [];
+        
+        push(item: T): void {
+          this.items.push(item);
+        }
+        
+        pop(): T | undefined {
+          return this.items.pop();
+        }
+        
+        peek(): T | undefined {
+          return this.items[this.items.length - 1];
+        }
+        
+        isEmpty(): boolean {
+          return this.items.length === 0;
+        }
+        
+        size(): number {
+          return this.items.length;
+        }
+      }
+      
+      // Using generic class
+      const numberStack = new Stack<number>();
+      numberStack.push(1);
+      numberStack.push(2);
+      numberStack.push(3);
+      
+      const stringStack = new Stack<string>();
+      stringStack.push("hello");
+      stringStack.push("world");
+      
+      // Generic functions
+      function identity<T>(arg: T): T {
+        return arg;
+      }
+      
+      function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+        return obj[key];
+      }
+      
+      const result = identity<string>("Hello");
+      const value = getProperty({ name: "John", age: 30 }, "name");
+      \`\`\`
+    `;
+
+    const slide34 = dedent`
+      ## 34. TypeScript Advanced Features
+
+      ### Utility Types:
+      Built-in types that help manipulate other types
+      
+      ### Common Utility Types:
+      - \`Partial<T>\`: Make all properties optional
+      - \`Required<T>\`: Make all properties required
+      - \`Pick<T, K>\`: Pick specific properties
+      - \`Omit<T, K>\`: Exclude specific properties
+      - \`Record<K, V>\`: Create object type with specific keys
+      - \`Exclude<T, U>\`: Exclude types from union
+      - \`Extract<T, U>\`: Extract types from union
+      
+      ### Type Guards and Assertions:
+      \`\`\`javascript
+      // Utility types examples
+      interface User {
+        id: number;
+        name: string;
+        email: string;
+        age?: number;
+      }
+      
+      // Partial - all properties optional
+      type PartialUser = Partial<User>;
+      const partialUser: PartialUser = { name: "John" };
+      
+      // Required - all properties required
+      type RequiredUser = Required<User>;
+      const requiredUser: RequiredUser = {
+        id: 1,
+        name: "John",
+        email: "john@example.com",
+        age: 30
+      };
+      
+      // Pick - select specific properties
+      type UserName = Pick<User, "name">;
+      const userName: UserName = { name: "John" };
+      
+      // Omit - exclude specific properties
+      type UserWithoutId = Omit<User, "id">;
+      const userWithoutId: UserWithoutId = {
+        name: "John",
+        email: "john@example.com"
+      };
+      
+      // Record - create object with specific keys
+      type StatusRecord = Record<"loading" | "success" | "error", string>;
+      const status: StatusRecord = {
+        loading: "Loading...",
+        success: "Success!",
+        error: "Error occurred"
+      };
+      
+      // Type guards
+      function isString(value: unknown): value is string {
+        return typeof value === "string";
+      }
+      
+      function isUser(obj: any): obj is User {
+        return obj && typeof obj.id === "number" && typeof obj.name === "string";
+      }
+      
+      // Type assertions
+      const userInput = getUserInput();
+      const user = userInput as User;
+      
+      // Conditional types
+      type NonNullable<T> = T extends null | undefined ? never : T;
+      type ApiResponse<T> = T extends string ? { message: T } : { data: T };
+      
+      // Mapped types
+      type Readonly<T> = {
+        readonly [P in keyof T]: T[P];
+      };
+      
+      type Optional<T> = {
+        [P in keyof T]?: T[P];
+      };
+      \`\`\`
+    `;
+
+    const slide35 = dedent`
+      ## 35. Introduction to JSDoc
+
+      ### What is JSDoc?
+      JSDoc is a documentation standard for JavaScript that uses special comment syntax to describe functions, variables, and other code elements.
+
+      ### Why Use JSDoc?
+      - **Type Checking**: Use \`// @ts-check\` for TypeScript-like checking in JS
+      - **IDE Support**: Better IntelliSense and autocomplete
+      - **Documentation**: Generate beautiful documentation websites (optional)
+      - **API Documentation**: Document your public APIs
+      - **Code Quality**: Encourage better code practices
+      
+      ### Basic JSDoc Syntax:
+      \`\`\`javascript
+      /**
+       * Calculates the area of a rectangle
+       * @param {number} width - The width of the rectangle
+       * @param {number} height - The height of the rectangle
+       * @returns {number} The area of the rectangle
+       */
+      function calculateArea(width, height) {
+        return width * height;
+      }
+      
+      /**
+       * Represents a person
+       * @typedef {Object} Person
+       * @property {string} name - The person's name
+       * @property {number} age - The person's age
+       * @property {string} [email] - The person's email (optional)
+       */
+      
+      /**
+       * Creates a greeting message
+       * @param {Person} person - The person to greet
+       * @returns {string} A greeting message
+       */
+      function greetPerson(person) {
+        return \`Hello, \${person.name}!\`;
+      }
+      \`\`\`
+      
+      ### Using JSDoc with TypeScript:
+      \`\`\`javascript
+      // @ts-check
+      /**
+       * Calculates the area of a rectangle
+       * @param {number} width - The width of the rectangle
+       * @param {number} height - The height of the rectangle
+       * @returns {number} The area of the rectangle
+       */
+      function calculateArea(width, height) {
+        return width * height;
+      }
+      \`\`\`
+      
+      ### Optional: Generate Documentation Website:
+      \`\`\`bash
+      # Only if you want to generate docs website
+      npm install --save-dev jsdoc
+      jsdoc src/ -d docs/
+      \`\`\`
+    `;
+
+    const slide36 = dedent`
+      ## 36. JSDoc Basic Tags
+
+      ### Essential JSDoc Tags:
+      - \`@param\`: Document function parameters
+      - \`@returns\` or \`@return\`: Document return values
+      - \`@throws\` or \`@exception\`: Document exceptions
+      - \`@example\`: Provide usage examples
+      - \`@since\`: Version when feature was added
+      - \`@deprecated\`: Mark as deprecated
+      - \`@see\`: Reference other documentation
+      
+      ### Parameter Documentation:
+      \`\`\`javascript
+      /**
+       * Validates user input and creates a user account
+       * @param {string} username - The desired username (3-20 characters)
+       * @param {string} email - Valid email address
+       * @param {string} password - Password (minimum 8 characters)
+       * @param {Object} [options] - Additional options
+       * @param {boolean} [options.sendWelcomeEmail=true] - Send welcome email
+       * @param {string[]} [options.tags] - User tags
+       * @returns {Promise<Object>} Promise that resolves to user object
+       * @throws {ValidationError} When input validation fails
+       * @throws {DuplicateError} When username or email already exists
+       * @example
+       * // Basic usage
+       * const user = await createUser('john_doe', 'john@example.com', 'password123');
+       * 
+       * // With options
+       * const user = await createUser('jane_doe', 'jane@example.com', 'password123', {
+       *   sendWelcomeEmail: false,
+       *   tags: ['premium', 'beta-tester']
+       * });
+       * @since 1.0.0
+       * @deprecated Use createUserV2 instead
+       * @see {@link https://api.example.com/users API Documentation}
+       */
+      async function createUser(username, email, password, options = {}) {
+        // Implementation here
+      }
+      \`\`\`
+      
+      ### Return Value Documentation:
+      \`\`\`javascript
+      /**
+       * Fetches user data from the API
+       * @param {number} userId - The user ID
+       * @returns {Promise<Object>} Promise resolving to user data
+       * @returns {Promise<null>} Returns null if user not found
+       * @example
+       * const user = await fetchUser(123);
+       * if (user) {
+       *   console.log(user.name);
+       * }
+       */
+      async function fetchUser(userId) {
+        // Implementation here
+      }
+      \`\`\`
+    `;
+
+    const slide37 = dedent`
+      ## 37. JSDoc Type Definitions
+
+      ### Type Annotations:
+      JSDoc supports comprehensive type information using JSDoc type expressions
+      
+      ### Basic Types:
+      - \`{string}\`: String type
+      - \`{number}\`: Number type
+      - \`{boolean}\`: Boolean type
+      - \`{Object}\`: Object type
+      - \`{Array}\`: Array type
+      - \`{Function}\`: Function type
+      - \`{*}\`: Any type
+      - \`{?}\`: Nullable type
+      - \`{!}\`: Non-nullable type
+      
+      ### Advanced Types:
+      \`\`\`javascript
+      /**
+       * Complex type definitions
+       * @param {string|number} id - String or number ID
+       * @param {Object<string, any>} config - Object with string keys
+       * @param {Array<string>} tags - Array of strings
+       * @param {string[]} categories - Alternative array syntax
+       * @param {Object} user - User object
+       * @param {string} user.name - User's name
+       * @param {number} user.age - User's age
+       * @param {Object} user.address - User's address
+       * @param {string} user.address.street - Street address
+       * @param {string} user.address.city - City
+       * @param {string} user.address.zipCode - ZIP code
+       * @param {Function} callback - Callback function
+       * @param {string} callback.error - Error message
+       * @param {Object} callback.data - Response data
+       * @returns {Promise<Object>} Promise resolving to result
+       */
+      async function processUserData(id, config, tags, categories, user, callback) {
+        // Implementation here
+      }
+      
+      /**
+       * Union and intersection types
+       * @param {string|number|boolean} value - Multiple possible types
+       * @param {Object & {id: number}} entity - Intersection type
+       * @returns {string|null} String or null
+       */
+      function processValue(value, entity) {
+        // Implementation here
+      }
+      
+      /**
+       * Generic types
+       * @template T - Generic type parameter
+       * @param {T} item - Generic item
+       * @returns {T} Same type as input
+       */
+      function identity(item) {
+        return item;
+      }
+      
+      /**
+       * Array and object variations
+       * @param {Array.<string>} stringArray - Array of strings (dot notation)
+       * @param {string[]} stringArray2 - Array of strings (bracket notation)
+       * @param {Object.<string, number>} stringToNumber - Object with string keys and number values
+       * @param {Object<string, number>} stringToNumber2 - Alternative syntax
+       */
+      function processArrays(stringArray, stringArray2, stringToNumber, stringToNumber2) {
+        // Implementation here
+      }
+      \`\`\`
+    `;
+
+    const slide38 = dedent`
+      ## 38. JSDoc Typedef and Namespace
+
+      ### @typedef Tag:
+      Create custom type definitions for complex objects
+      
+      ### @namespace Tag:
+      Group related functions and variables
+      
+      \`\`\`javascript
+      /**
+       * @typedef {Object} User
+       * @property {number} id - Unique identifier
+       * @property {string} name - User's full name
+       * @property {string} email - User's email address
+       * @property {string} [avatar] - Optional avatar URL
+       * @property {Date} createdAt - Account creation date
+       * @property {boolean} isActive - Account status
+       * @property {UserRole} role - User's role
+       * @property {UserPreferences} preferences - User preferences
+       */
+      
+      /**
+       * @typedef {Object} UserPreferences
+       * @property {string} theme - UI theme ('light' | 'dark')
+       * @property {string} language - Language code
+       * @property {boolean} notifications - Enable notifications
+       * @property {Object} privacy - Privacy settings
+       * @property {boolean} privacy.profilePublic - Make profile public
+       * @property {boolean} privacy.showEmail - Show email to others
+       */
+      
+      /**
+       * @typedef {'admin'|'user'|'moderator'} UserRole
+       */
+      
+      /**
+       * @typedef {Object} ApiResponse
+       * @template T
+       * @property {boolean} success - Request success status
+       * @property {T} data - Response data
+       * @property {string} [message] - Optional message
+       * @property {number} [code] - Optional status code
+       * @property {Object} [error] - Error details if failed
+       * @property {string} error.message - Error message
+       * @property {string} error.code - Error code
+       */
+      
+      /**
+       * User management namespace
+       * @namespace UserManager
+       */
+      const UserManager = {
+        /**
+         * Creates a new user
+         * @param {Object} userData - User data
+         * @param {string} userData.name - User's name
+         * @param {string} userData.email - User's email
+         * @param {string} userData.password - User's password
+         * @returns {Promise<ApiResponse<User>>} Promise resolving to API response
+         */
+        async create(userData) {
+          // Implementation here
+        },
+        
+        /**
+         * Finds user by ID
+         * @param {number} id - User ID
+         * @returns {Promise<User|null>} User object or null
+         */
+        async findById(id) {
+          // Implementation here
+        },
+        
+        /**
+         * Updates user data
+         * @param {number} id - User ID
+         * @param {Partial<User>} updates - Fields to update
+         * @returns {Promise<boolean>} Success status
+         */
+        async update(id, updates) {
+          // Implementation here
+        }
+      };
+      
+      /**
+       * Global configuration namespace
+       * @namespace Config
+       */
+      const Config = {
+        /** @type {string} API base URL */
+        apiUrl: 'https://api.example.com',
+        
+        /** @type {number} Request timeout in milliseconds */
+        timeout: 5000,
+        
+        /** @type {boolean} Enable debug mode */
+        debug: false
+      };
+      \`\`\`
+    `;
+
+    const slide39 = dedent`
+      ## 39. JSDoc Advanced Tags
+
+      ### Documentation Control Tags:
+      - \`@ignore\`: Exclude from documentation
+      - \`@internal\`: Mark as internal (not public API)
+      - \`@override\`: Indicate method overrides parent
+      - \`@inheritdoc\`: Inherit documentation from parent
+      - \`@abstract\`: Mark as abstract method
+      - \`@virtual\`: Mark as virtual method
+      
+      ### Module and File Tags:
+      - \`@module\`: Define a module
+      - \`@exports\`: Document module exports
+      - \`@file\`: Document a file
+      - \`@fileoverview\`: File description
+      - \`@overview\`: Module overview
+      
+      ### Event and Callback Tags:
+      - \`@event\`: Document events
+      - \`@fires\`: Document events fired by function
+      - \`@listens\`: Document event listeners
+      - \`@callback\`: Document callback functions
+      
+      \`\`\`javascript
+      /**
+       * @fileoverview User authentication module
+       * @module auth
+       * @author John Doe
+       * @version 1.2.0
+       * @since 1.0.0
+       */
+      
+      /**
+       * Authentication manager class
+       * @class AuthManager
+       * @memberof module:auth
+       */
+      class AuthManager {
+        /**
+         * User login callback
+         * @callback LoginCallback
+         * @param {Error|null} error - Error object if login failed
+         * @param {User|null} user - User object if login successful
+         */
+        
+        /**
+         * Attempts to log in a user
+         * @param {string} email - User's email
+         * @param {string} password - User's password
+         * @param {LoginCallback} callback - Login result callback
+         * @fires AuthManager#loginSuccess
+         * @fires AuthManager#loginError
+         * @example
+         * authManager.login('user@example.com', 'password', (error, user) => {
+         *   if (error) {
+         *     console.error('Login failed:', error.message);
+         *   } else {
+         *     console.log('Welcome,', user.name);
+         *   }
+         * });
+         */
+        login(email, password, callback) {
+          // Implementation here
+        }
+        
+        /**
+         * Login success event
+         * @event AuthManager#loginSuccess
+         * @type {Object}
+         * @property {User} user - The logged in user
+         * @property {Date} timestamp - Login timestamp
+         */
+        
+        /**
+         * Login error event
+         * @event AuthManager#loginError
+         * @type {Object}
+         * @property {Error} error - The error that occurred
+         * @property {string} email - The email that failed
+         */
+        
+        /**
+         * Abstract method for token validation
+         * @abstract
+         * @param {string} token - Authentication token
+         * @returns {Promise<boolean>} Token validity
+         */
+        async validateToken(token) {
+          throw new Error('Method must be implemented by subclass');
+        }
+        
+        /**
+         * Internal method for token generation
+         * @private
+         * @internal
+         * @param {User} user - User object
+         * @returns {string} Generated token
+         */
+        generateToken(user) {
+          // Implementation here
+        }
+      }
+      
+      /**
+       * @ignore
+       * Internal utility function - not included in documentation
+       */
+      function internalHelper() {
+        // Implementation here
+      }
+      \`\`\`
+    `;
+
+    const slide40 = dedent`
+      ## 40. JSDoc Class and Method Documentation
+
+      ### Class Documentation:
+      Document classes, constructors, methods, and properties
+      
+      ### Method Documentation:
+      - \`@static\`: Static method
+      - \`@instance\`: Instance method
+      - \`@chainable\`: Method returns this for chaining
+      - \`@async\`: Async method
+      - \`@generator\`: Generator method
+      - \`@yields\`: Document generator yields
+      
+      \`\`\`javascript
+      /**
+       * Represents a shopping cart
+       * @class Cart
+       * @param {Object} [options] - Cart options
+       * @param {string} [options.currency='USD'] - Currency code
+       * @param {number} [options.taxRate=0.08] - Tax rate
+       * @example
+       * const cart = new Cart({ currency: 'EUR', taxRate: 0.20 });
+       * cart.addItem({ id: 1, name: 'Book', price: 19.99 });
+       */
+      class Cart {
+        /**
+         * Creates an instance of Cart
+         * @param {Object} options - Cart configuration
+         */
+        constructor(options = {}) {
+          /** @type {string} Currency code */
+          this.currency = options.currency || 'USD';
+          
+          /** @type {number} Tax rate (0-1) */
+          this.taxRate = options.taxRate || 0.08;
+          
+          /** @type {Array<Object>} Cart items */
+          this.items = [];
+          
+          /** @type {number} Total before tax */
+          this.subtotal = 0;
+        }
+        
+        /**
+         * Adds an item to the cart
+         * @param {Object} item - Item to add
+         * @param {number} item.id - Item ID
+         * @param {string} item.name - Item name
+         * @param {number} item.price - Item price
+         * @param {number} [item.quantity=1] - Item quantity
+         * @returns {Cart} This cart instance for chaining
+         * @chainable
+         * @example
+         * cart.addItem({ id: 1, name: 'Book', price: 19.99, quantity: 2 });
+         */
+        addItem(item) {
+          this.items.push(item);
+          this.calculateSubtotal();
+          return this;
+        }
+        
+        /**
+         * Removes an item from the cart
+         * @param {number} itemId - ID of item to remove
+         * @returns {boolean} True if item was removed
+         */
+        removeItem(itemId) {
+          const index = this.items.findIndex(item => item.id === itemId);
+          if (index !== -1) {
+            this.items.splice(index, 1);
+            this.calculateSubtotal();
+            return true;
+          }
+          return false;
+        }
+        
+        /**
+         * Calculates the subtotal
+         * @private
+         * @returns {void}
+         */
+        calculateSubtotal() {
+          this.subtotal = this.items.reduce((total, item) => {
+            return total + (item.price * (item.quantity || 1));
+          }, 0);
+        }
+        
+        /**
+         * Calculates the total including tax
+         * @returns {number} Total amount including tax
+         * @example
+         * const total = cart.getTotal(); // Returns subtotal + tax
+         */
+        getTotal() {
+          return this.subtotal + (this.subtotal * this.taxRate);
+        }
+        
+        /**
+         * Clears all items from the cart
+         * @returns {Cart} This cart instance for chaining
+         * @chainable
+         */
+        clear() {
+          this.items = [];
+          this.subtotal = 0;
+          return this;
+        }
+        
+        /**
+         * Static method to create cart from JSON
+         * @static
+         * @param {string} jsonString - JSON string representation
+         * @returns {Cart} New cart instance
+         * @throws {Error} When JSON is invalid
+         */
+        static fromJSON(jsonString) {
+          const data = JSON.parse(jsonString);
+          const cart = new Cart(data.options);
+          cart.items = data.items;
+          cart.calculateSubtotal();
+          return cart;
+        }
+        
+        /**
+         * Async method to save cart to server
+         * @async
+         * @param {string} userId - User ID
+         * @returns {Promise<Object>} Server response
+         * @throws {Error} When save fails
+         */
+        async saveToServer(userId) {
+          // Implementation here
+        }
+        
+        /**
+         * Generator method for iterating items
+         * @generator
+         * @yields {Object} Cart item
+         */
+        *iterateItems() {
+          for (const item of this.items) {
+            yield item;
+          }
+        }
+      }
+      \`\`\`
+    `;
+
+    const slide41 = dedent`
+      ## 41. JSDoc Configuration and Plugins
+
+      ### JSDoc Configuration (Optional):
+      Only needed if you want to generate documentation websites
+      
+      ### Common Configuration Options:
+      - \`source\`: Source files to document
+      - \`destination\`: Output directory
+      - \`recurse\`: Recursively process subdirectories
+      - \`template\`: Template for documentation
+      - \`opts\`: Command line options
+      - \`plugins\`: JSDoc plugins to use
+      - \`tags\`: Custom tag definitions
+      
+      ### Configuration Example:
+      \`\`\`json
+      {
+        "source": {
+          "include": ["./src/", "./README.md"],
+          "includePattern": "\\\\.js$",
+          "excludePattern": "(node_modules/|docs/)"
+        },
+        "opts": {
+          "destination": "./docs/",
+          "recurse": true,
+          "template": "node_modules/docdash"
+        },
+        "plugins": [
+          "plugins/markdown",
+          "plugins/summarize"
+        ],
+        "templates": {
+          "cleverLinks": false,
+          "monospaceLinks": false,
+          "default": {
+            "outputSourceFiles": true
+          }
+        },
+        "tags": {
+          "allowUnknownTags": true,
+          "dictionaries": ["jsdoc", "closure"]
+        }
+      }
+      \`\`\`
+      
+      ### Package.json Scripts (Optional):
+      \`\`\`json
+      {
+        "scripts": {
+          "docs": "jsdoc -c jsdoc.conf.json",
+          "docs:serve": "jsdoc -c jsdoc.conf.json && http-server docs/",
+          "docs:watch": "nodemon --watch src/ --ext js --exec 'npm run docs'"
+        },
+        "devDependencies": {
+          "jsdoc": "^4.0.0",
+          "docdash": "^1.2.0",
+          "nodemon": "^3.0.0",
+          "http-server": "^14.0.0"
+        }
+      }
+      \`\`\`
+      
+      ### Using JSDoc Without Installation:
+      Just add \`// @ts-check\` at the top of your JavaScript files to get type checking and IntelliSense from JSDoc comments!
+      
+      ### Popular JSDoc Plugins:
+      - **markdown**: Process markdown in comments
+      - **summarize**: Generate summary pages
+      - **tutorials**: Include tutorial pages
+      - **better-docs**: Enhanced templates
+      - **jsdoc-vue**: Vue.js component support
+      
+      ### Popular Templates:
+      - **docdash**: Clean, responsive template
+      - **minami**: Clean, minimal template
+      - **better-docs**: Modern template with search
+      - **tui-jsdoc-template**: TUI-style template
+      
+      ### Command Line Usage (Optional):
+      \`\`\`bash
+      # Basic usage (only if you installed jsdoc)
+      jsdoc src/ -d docs/
+      
+      # With configuration file
+      jsdoc -c jsdoc.conf.json
+      
+      # Watch mode with nodemon
+      nodemon --watch src/ --ext js --exec 'jsdoc -c jsdoc.conf.json'
+      
+      # Generate with specific template
+      jsdoc src/ -d docs/ -t node_modules/docdash
+      \`\`\`
+      
+      ### The Better Way - Just Use @ts-check:
+      \`\`\`javascript
+      // @ts-check
+      /**
+       * @param {string} name
+       * @param {number} age
+       * @returns {string}
+       */
+      function greet(name, age) {
+        return \`Hello \${name}, you are \${age} years old\`;
+      }
+      \`\`\`
+    `;
+
+    const slide42 = dedent`
+      ## 42. JSDoc Best Practices and Tips
+
+      ### Documentation Best Practices:
+      - **Be Consistent**: Use consistent formatting and style
+      - **Be Complete**: Document all public APIs
+      - **Be Clear**: Write clear, concise descriptions
+      - **Use Examples**: Provide practical examples
+      - **Keep Updated**: Maintain documentation with code changes
+      
+      ### Writing Effective JSDoc:
+      \`\`\`javascript
+      /**
+       * Calculates the compound interest for an investment
+       * 
+       * This function uses the standard compound interest formula:
+       * A = P(1 + r/n)^(nt)
+       * 
+       * Where:
+       * - P = principal amount
+       * - r = annual interest rate
+       * - n = number of times interest is compounded per year
+       * - t = time in years
+       * 
+       * @param {number} principal - The initial amount of money
+       * @param {number} rate - Annual interest rate (as decimal, e.g., 0.05 for 5%)
+       * @param {number} time - Time period in years
+       * @param {number} [compoundsPerYear=12] - Number of times compounded per year
+       * @returns {number} The final amount after compound interest
+       * @throws {Error} When principal, rate, or time is negative
+       * @example
+       * // Calculate interest for $1000 at 5% for 2 years, compounded monthly
+       * const amount = compoundInterest(1000, 0.05, 2, 12);
+       * console.log(amount); // Approximately 1104.94
+       * 
+       * @example
+       * // Calculate with default monthly compounding
+       * const amount = compoundInterest(1000, 0.05, 2);
+       * console.log(amount); // Same result as above
+       * 
+       * @since 1.0.0
+       * @author John Doe
+       * @see {@link https://en.wikipedia.org/wiki/Compound_interest Compound Interest}
+       */
+      function compoundInterest(principal, rate, time, compoundsPerYear = 12) {
+        if (principal < 0 || rate < 0 || time < 0) {
+          throw new Error('Principal, rate, and time must be non-negative');
+        }
+        
+        return principal * Math.pow(1 + rate / compoundsPerYear, compoundsPerYear * time);
+      }
+      
+      /**
+       * Validates email format using regex
+       * @param {string} email - Email address to validate
+       * @returns {boolean} True if email format is valid
+       * @example
+       * const isValid = isValidEmail('user@example.com'); // true
+       * const isInvalid = isValidEmail('invalid-email'); // false
+       */
+      function isValidEmail(email) {
+        const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+        return emailRegex.test(email);
+      }
+      \`\`\`
+      
+      ### Common Mistakes to Avoid:
+      - Don't document obvious things
+      - Don't use vague descriptions
+      - Don't forget to update documentation
+      - Don't mix JSDoc with regular comments
+      - Don't use \`@param\` for destructured parameters incorrectly
+      
+      ### IDE Integration:
+      - **VS Code**: Built-in JSDoc support with // @ts-check
+      - ** WebStorm **: Excellent JSDoc integration
+      - ** Sublime Text **: JSDoc plugins available
+      - ** Atom **: JSDoc packages available
+      
+      ### Quick Start(No Installation Required):
+    \`\`\`javascript
+      // @ts-check
+      /**
+       * @param {string} name
+       * @param {number} age
+       * @returns {string}
+       */
+      function greet(name, age) {
+        return \`Hello \${name}, you are \${age} years old\`;
+      }
+      
+      // TypeScript will now check this function!
+      greet("John", 30); // ✅ Correct
+      greet(30, "John"); // ❌ TypeScript error!
+      \`\`\`
+    `;
+
+    const slide43 = dedent`
+      ## 43. HTTP Status Codes Overview
+
+      ### What are HTTP Status Codes?
+      HTTP status codes are three-digit numbers returned by web servers to indicate the result of a client's request.
+
+      ### Status Code Categories:
+      - **1xx (Informational)**: Request received, continuing process
+      - **2xx (Success)**: Request successfully received, understood, and accepted
+      - **3xx (Redirection)**: Further action needed to complete the request
+      - **4xx (Client Error)**: Request contains bad syntax or cannot be fulfilled
+      - **5xx (Server Error)**: Server failed to fulfill a valid request
+
+      ### Common Status Codes:
+      \`\`\`javascript
+      // Checking status codes in JavaScript
+      fetch('https://api.example.com/data')
+        .then(response => {
+          console.log('Status:', response.status);
+          console.log('Status Text:', response.statusText);
+          
+          if (response.ok) {
+            // Status codes 200-299
+            return response.json();
+          } else {
+            throw new Error(\`HTTP \${response.status}: \${response.statusText}\`);
+          }
+        })
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
+      \`\`\`
+
+      ### Status Code Ranges:
+      - **100-199**: Informational responses
+      - **200-299**: Successful responses
+      - **300-399**: Redirection messages
+      - **400-499**: Client error responses
+      - **500-599**: Server error responses
+    `;
+
+    const slide44 = dedent`
+      ## 44. 2xx Success Status Codes
+
+      ### 200 Series - Success Responses:
+      Indicate that the client's request was successfully received, understood, and accepted.
+
+      ### Common 2xx Status Codes:
+      - **200 OK**: Request succeeded
+      - **201 Created**: New resource created successfully
+      - **202 Accepted**: Request accepted but processing not completed
+      - **204 No Content**: Request succeeded but no content returned
+      - **206 Partial Content**: Partial content returned (for range requests)
+
+      ### Usage Examples:
+      \`\`\`javascript
+      // 200 OK - Successful GET request
+      fetch('/api/users')
+        .then(response => {
+          if (response.status === 200) {
+            return response.json();
+          }
+        });
+
+      // 201 Created - Successful POST request
+      fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'John', email: 'john@example.com' })
+      })
+      .then(response => {
+        if (response.status === 201) {
+          console.log('User created successfully');
+          return response.json();
+        }
+      });
+
+      // 204 No Content - Successful DELETE request
+      fetch('/api/users/123', { method: 'DELETE' })
+        .then(response => {
+          if (response.status === 204) {
+            console.log('User deleted successfully');
+          }
+        });
+
+      // 206 Partial Content - Range request
+      fetch('/api/large-file', {
+        headers: { 'Range': 'bytes=0-1023' }
+      })
+      .then(response => {
+        if (response.status === 206) {
+          console.log('Partial content received');
+        }
+      });
+      \`\`\`
+
+      ### When to Use Each:
+      - **200**: Standard successful response
+      - **201**: After creating new resources
+      - **202**: For asynchronous processing
+      - **204**: When no content needs to be returned
+      - **206**: For partial content delivery
+    `;
+
+    const slide45 = dedent`
+      ## 45. 3xx Redirection Status Codes
+
+      ### 300 Series - Redirection Responses:
+      Indicate that the client must take additional action to complete the request.
+
+      ### Common 3xx Status Codes:
+      - **301 Moved Permanently**: Resource permanently moved to new URL
+      - **302 Found**: Resource temporarily moved to new URL
+      - **304 Not Modified**: Resource not modified since last request
+      - **307 Temporary Redirect**: Temporary redirect preserving method
+      - **308 Permanent Redirect**: Permanent redirect preserving method
+
+      ### Usage Examples:
+      \`\`\`javascript
+      // Handling redirects in fetch
+      fetch('/api/old-endpoint')
+        .then(response => {
+          if (response.status === 301) {
+            console.log('Resource moved permanently to:', response.headers.get('Location'));
+          } else if (response.status === 302) {
+            console.log('Resource temporarily moved to:', response.headers.get('Location'));
+          } else if (response.status === 304) {
+            console.log('Resource not modified - use cached version');
+          }
+        });
+
+      // Conditional request with If-Modified-Since
+      fetch('/api/data', {
+        headers: {
+          'If-Modified-Since': 'Wed, 21 Oct 2015 07:28:00 GMT'
+        }
+      })
+      .then(response => {
+        if (response.status === 304) {
+          console.log('Use cached data');
+        } else if (response.status === 200) {
+          console.log('New data available');
+        }
+      });
+
+      // Following redirects automatically
+      fetch('/api/redirect-endpoint', {
+        redirect: 'follow' // Default behavior
+      });
+
+      // Not following redirects
+      fetch('/api/redirect-endpoint', {
+        redirect: 'manual'
+      })
+      .then(response => {
+        if (response.type === 'opaqueredirect') {
+          console.log('Redirect detected but not followed');
+        }
+      });
+      \`\`\`
+
+      ### Redirect Types:
+      - **301/308**: Permanent redirects
+      - **302/307**: Temporary redirects
+      - **304**: Caching optimization
+    `;
+
+    const slide46 = dedent`
+      ## 46. 4xx Client Error Status Codes
+
+      ### 400 Series - Client Error Responses:
+      Indicate that the client made an error in the request.
+
+      ### Common 4xx Status Codes:
+      - **400 Bad Request**: Malformed request syntax
+      - **401 Unauthorized**: Authentication required
+      - **403 Forbidden**: Server refuses to authorize request
+      - **404 Not Found**: Resource not found
+      - **405 Method Not Allowed**: HTTP method not allowed
+      - **409 Conflict**: Request conflicts with current state
+      - **422 Unprocessable Entity**: Well-formed request but semantic errors
+      - **429 Too Many Requests**: Rate limit exceeded
+
+      ### Usage Examples:
+      \`\`\`javascript
+      // Error handling for different 4xx codes
+      async function handleApiRequest(url, options = {}) {
+        try {
+          const response = await fetch(url, options);
+          
+          if (response.status === 400) {
+            const error = await response.json();
+            throw new Error(\`Bad Request: \${error.message}\`);
+          } else if (response.status === 401) {
+            // Redirect to login or refresh token
+            window.location.href = '/login';
+            throw new Error('Authentication required');
+          } else if (response.status === 403) {
+            throw new Error('Access forbidden - insufficient permissions');
+          } else if (response.status === 404) {
+            throw new Error('Resource not found');
+          } else if (response.status === 405) {
+            throw new Error('HTTP method not allowed for this endpoint');
+          } else if (response.status === 409) {
+            const error = await response.json();
+            throw new Error(\`Conflict: \${error.message}\`);
+          } else if (response.status === 422) {
+            const errors = await response.json();
+            throw new Error(\`Validation errors: \${JSON.stringify(errors)}\`);
+          } else if (response.status === 429) {
+            const retryAfter = response.headers.get('Retry-After');
+            throw new Error(\`Rate limit exceeded. Retry after \${retryAfter} seconds\`);
+          }
+          
+          return await response.json();
+        } catch (error) {
+          console.error('API Error:', error.message);
+          throw error;
+        }
+      }
+
+      // Usage examples
+      handleApiRequest('/api/users/999') // Might return 404
+      handleApiRequest('/api/users', { method: 'POST', body: 'invalid json' }) // Might return 400
+      handleApiRequest('/api/protected', { headers: { 'Authorization': 'invalid' } }) // Might return 401
+      \`\`\`
+
+      ### Common Scenarios:
+      - **400**: Invalid JSON, missing required fields
+      - **401**: Missing or invalid authentication token
+      - **403**: Valid auth but insufficient permissions
+      - **404**: Wrong URL or deleted resource
+      - **422**: Validation errors in request data
+    `;
+
+    const slide47 = dedent`
+      ## 47. 5xx Server Error Status Codes
+
+      ### 500 Series - Server Error Responses:
+      Indicate that the server encountered an error and could not fulfill the request.
+
+      ### Common 5xx Status Codes:
+      - **500 Internal Server Error**: Generic server error
+      - **501 Not Implemented**: Server doesn't support the request method
+      - **502 Bad Gateway**: Invalid response from upstream server
+      - **503 Service Unavailable**: Server temporarily unavailable
+      - **504 Gateway Timeout**: Upstream server timeout
+      - **505 HTTP Version Not Supported**: Unsupported HTTP version
+
+      ### Usage Examples:
+      \`\`\`javascript
+      // Handling server errors with retry logic
+      async function fetchWithRetry(url, options = {}, maxRetries = 3) {
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+          try {
+            const response = await fetch(url, options);
+            
+            if (response.status === 500) {
+              throw new Error('Internal server error');
+            } else if (response.status === 502) {
+              throw new Error('Bad gateway - upstream server error');
+            } else if (response.status === 503) {
+              const retryAfter = response.headers.get('Retry-After');
+              if (retryAfter && attempt < maxRetries) {
+                console.log(\`Service unavailable. Retrying after \${retryAfter} seconds\`);
+                await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+                continue;
+              }
+              throw new Error('Service temporarily unavailable');
+            } else if (response.status === 504) {
+              throw new Error('Gateway timeout');
+            }
+            
+            return await response.json();
+          } catch (error) {
+            if (attempt === maxRetries) {
+              throw error;
+            }
+            console.log(\`Attempt \${attempt} failed, retrying...\`);
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+          }
+        }
+      }
+
+      // Usage with exponential backoff
+      async function fetchWithBackoff(url, options = {}) {
+        const maxRetries = 5;
+        let delay = 1000; // Start with 1 second
+        
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+          try {
+            const response = await fetch(url, options);
+            
+            if (response.status >= 500) {
+              throw new Error(\`Server error: \${response.status}\`);
+            }
+            
+            return await response.json();
+          } catch (error) {
+            if (attempt === maxRetries) {
+              throw error;
+            }
+            
+            console.log(\`Attempt \${attempt} failed. Waiting \${delay}ms before retry...\`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            delay *= 2; // Exponential backoff
+          }
+        }
+      }
+      \`\`\`
+
+      ### Server Error Handling Strategies:
+      - **Retry Logic**: Implement exponential backoff
+      - **Circuit Breaker**: Stop requests when server is down
+      - **Fallback**: Use cached data or alternative services
+      - **User Notification**: Inform users of temporary issues
+    `;
+
+    const slide48 = dedent`
+      ## 48. HTTPS and Security Status Codes
+
+      ### HTTPS (HTTP Secure):
+      HTTPS is HTTP over TLS/SSL encryption, providing secure communication.
+
+      ### Security-Related Status Codes:
+      - **426 Upgrade Required**: Client must upgrade to HTTPS
+      - **451 Unavailable For Legal Reasons**: Censored content
+      - **511 Network Authentication Required**: Network-level authentication
+
+      ### HTTPS Implementation:
+      \`\`\`javascript
+      // Checking if site is using HTTPS
+      if (location.protocol === 'https:') {
+        console.log('Site is using HTTPS');
+      } else {
+        console.log('Site is using HTTP - consider upgrading');
+      }
+
+      // Making secure API requests
+      async function secureApiCall(endpoint, data) {
+        const url = \`https://api.example.com\${endpoint}\`;
+        
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': \`Bearer \${getAuthToken()}\`
+            },
+            body: JSON.stringify(data)
+          });
+          
+          if (response.status === 426) {
+            throw new Error('HTTPS required for this endpoint');
+          }
+          
+          return await response.json();
+        } catch (error) {
+          console.error('Secure API call failed:', error);
+          throw error;
+        }
+      }
+
+      // Handling mixed content warnings
+      function checkMixedContent() {
+        if (location.protocol === 'https:') {
+          // Check for HTTP resources on HTTPS page
+          const httpImages = document.querySelectorAll('img[src^="http://"]');
+          const httpScripts = document.querySelectorAll('script[src^="http://"]');
+          
+          if (httpImages.length > 0 || httpScripts.length > 0) {
+            console.warn('Mixed content detected - some resources are not secure');
+          }
+        }
+      }
+      \`\`\`
+
+      ### Security Best Practices:
+      - **Always use HTTPS** for production applications
+      - **Implement HSTS** (HTTP Strict Transport Security)
+      - **Use secure cookies** with \`Secure\` and \`HttpOnly\` flags
+      - **Validate SSL certificates** in production
+      - **Avoid mixed content** (HTTP resources on HTTPS pages)
+
+      ### HTTPS Headers:
+      \`\`\`javascript
+      // Security headers to implement
+      const securityHeaders = {
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'X-XSS-Protection': '1; mode=block',
+        'Content-Security-Policy': "default-src 'self'"
+      };
+      \`\`\`
+    `;
+
+    const slide49 = dedent`
+      ## 49. HTTP Status Code Best Practices
+
+      ### Choosing the Right Status Code:
+      - **Be Consistent**: Use the same status code for similar situations
+      - **Be Specific**: Choose the most specific status code that applies
+      - **Follow Standards**: Use standard HTTP status codes, not custom ones
+      - **Document Usage**: Document which status codes your API returns
+
+      ### Common Patterns:
+      \`\`\`javascript
+      // RESTful API status code patterns
+      class ApiResponse {
+        static success(data, statusCode = 200) {
+          return {
+            status: statusCode,
+            data: data,
+            message: 'Success'
+          };
+        }
+        
+        static created(data) {
+          return {
+            status: 201,
+            data: data,
+            message: 'Resource created successfully'
+          };
+        }
+        
+        static noContent() {
+          return {
+            status: 204,
+            message: 'No content'
+          };
+        }
+        
+        static error(message, statusCode = 400, details = null) {
+          return {
+            status: statusCode,
+            error: message,
+            details: details
+          };
+        }
+        
+        static notFound(resource = 'Resource') {
+          return {
+            status: 404,
+            error: \`\${resource} not found\`
+          };
+        }
+        
+        static unauthorized() {
+          return {
+            status: 401,
+            error: 'Authentication required'
+          };
+        }
+        
+        static forbidden() {
+          return {
+            status: 403,
+            error: 'Access forbidden'
+          };
+        }
+        
+        static validationError(errors) {
+          return {
+            status: 422,
+            error: 'Validation failed',
+            details: errors
+          };
+        }
+        
+        static serverError(message = 'Internal server error') {
+          return {
+            status: 500,
+            error: message
+          };
+        }
+      }
+
+      // Usage examples
+      const responses = {
+        getUser: (user) => ApiResponse.success(user),
+        createUser: (user) => ApiResponse.created(user),
+        deleteUser: () => ApiResponse.noContent(),
+        userNotFound: () => ApiResponse.notFound('User'),
+        invalidData: (errors) => ApiResponse.validationError(errors)
+      };
+      \`\`\`
+
+      ### Status Code Guidelines:
+      - **200**: Successful GET, PUT, PATCH
+      - **201**: Successful POST (resource creation)
+      - **204**: Successful DELETE
+      - **400**: Bad request syntax
+      - **401**: Missing or invalid authentication
+      - **403**: Valid auth but insufficient permissions
+      - **404**: Resource not found
+      - **422**: Validation errors
+      - **500**: Server errors
+
+      ### Testing Status Codes:
+      \`\`\`javascript
+      // Testing different status codes
+      async function testStatusCodes() {
+        const tests = [
+          { url: '/api/users', expected: 200 },
+          { url: '/api/users/999', expected: 404 },
+          { url: '/api/protected', expected: 401 },
+          { url: '/api/invalid', expected: 400 }
+        ];
+        
+        for (const test of tests) {
+          try {
+            const response = await fetch(test.url);
+            console.log(\`\${test.url}: \${response.status} (expected: \${test.expected})\`);
+          } catch (error) {
+            console.error(\`\${test.url}: Error - \${error.message}\`);
+          }
+        }
+      }
+      \`\`\`
+    `;
+
+    const slide50 = dedent`
+      ## 50. Next Steps and Resources
 
       ### What You've Learned:
       ✅ Variables and data types  
@@ -2052,35 +3630,43 @@
       ✅ CommonJS modules  
       ✅ Regular expressions  
       ✅ JSON and Fetch API  
+      ✅ TypeScript fundamentals  
+      ✅ JSDoc documentation  
+      ✅ HTTP and HTTPS status codes  
       
       ### Next Steps:
-      - **Practice**: Build small projects
-      - **Frameworks**: Learn React, Vue, or Angular
-      - **Backend**: Learn Express.js, MongoDB
-      - **Tools**: Learn npm, webpack, Babel
-      - **Testing**: Learn Jest, Cypress
-      - **TypeScript**: Add type safety to JavaScript
+      - **Practice**: Build small projects with TypeScript
+      - **Documentation**: Use JSDoc in your projects
+      - **APIs**: Learn RESTful API design and HTTP status codes
+      - **Frameworks**: Learn React, Vue, or Angular with TypeScript
+      - **Backend**: Learn Express.js with TypeScript
+      - **Tools**: Learn npm, webpack, Babel, ESLint
+      - **Testing**: Learn Jest, Cypress with TypeScript
+      - **Advanced**: Learn TypeScript advanced features
       
       ### Recommended Resources:
+      - **TypeScript Handbook**: Official TypeScript documentation
+      - **JSDoc Documentation**: Official JSDoc documentation
       - **MDN Web Docs**: Comprehensive JavaScript reference
+      - **HTTP Status Codes**: MDN HTTP status codes reference
       - **Node.js Official Docs**: Server-side JavaScript
       - **JavaScript.info**: Modern JavaScript tutorial
       - **FreeCodeCamp**: Interactive coding challenges
       - **Eloquent JavaScript**: Free online book
       
       ### Project Ideas:
-      - Todo list with local storage
-      - Weather app with API
-      - Simple calculator
-      - Memory game
-      - REST API with Express.js
-      - Real-time chat application
+      - Todo list with TypeScript and JSDoc
+      - Weather app with API and proper HTTP status handling
+      - Simple calculator with type safety
+      - Memory game with TypeScript classes
+      - REST API with Express.js and TypeScript
+      - Real-time chat application with documentation
       
-      **Keep coding and have fun! 🚀**
+      **Keep coding and documenting! 🚀**
     `;
 
     // Array of all slides for easy iteration
-    const allSlides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8, slide9, slide10, slide11, slide12, slide13, slide14, slide15, slide16, slide17, slide18, slide19, slide20, slide21, slide22, slide23, slide24, slide25, slide26, slide27, slide28, slide29, slide30, slide31];
+    const allSlides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8, slide9, slide10, slide11, slide12, slide13, slide14, slide15, slide16, slide17, slide18, slide19, slide20, slide21, slide22, slide23, slide24, slide25, slide26, slide27, slide28, slide29, slide30, slide31, slide32, slide33, slide34, slide35, slide36, slide37, slide38, slide39, slide40, slide41, slide42, slide43, slide44, slide45, slide46, slide47, slide48, slide49, slide50];
 
     // Initialize the presentation
     function initPresentation() {
@@ -2163,6 +3749,25 @@
         "JSON: JavaScript Object Notation",
         "Fetch API: Making HTTP Requests",
         "Best Practices and Code Style",
+        "Introduction to TypeScript",
+        "TypeScript Types and Interfaces",
+        "TypeScript Classes and Generics",
+        "TypeScript Advanced Features",
+        "Introduction to JSDoc",
+        "JSDoc Basic Tags",
+        "JSDoc Type Definitions",
+        "JSDoc Typedef and Namespace",
+        "JSDoc Advanced Tags",
+        "JSDoc Class and Method Documentation",
+        "JSDoc Configuration and Plugins",
+        "JSDoc Best Practices and Tips",
+        "HTTP Status Codes Overview",
+        "2xx Success Status Codes",
+        "3xx Redirection Status Codes",
+        "4xx Client Error Status Codes",
+        "5xx Server Error Status Codes",
+        "HTTPS and Security Status Codes",
+        "HTTP Status Code Best Practices",
         "Next Steps and Resources"
       ];
 
